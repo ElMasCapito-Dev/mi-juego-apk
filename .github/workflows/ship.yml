@@ -34,6 +34,13 @@ jobs:
           echo "android.ndk = 25b" >> buildozer.spec
           echo "android.accept_sdk_license = True" >> buildozer.spec
 
+      # 👇 ESTE ES EL PASO NUEVO QUE LO ARREGLA TODO 👇
+      - name: Aceptar Licencias de Android
+        run: |
+          mkdir -p /root/.android
+          touch /root/.android/repositories.cfg
+          yes | sdkmanager --licenses || true
+          
       - name: Compilar APK con Buildozer
         timeout-minutes: 45
         env:
