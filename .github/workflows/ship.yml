@@ -10,10 +10,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
+      # Usamos la imagen oficial de Kivy/Buildozer para que no falle Docker
       - name: Build with Buildozer
-        uses: digreatbrian/buildozer-action@v1
+        uses: ArtemSBulgakov/buildozer-action@v1.2.0
         with:
-          command: buildozer android debug
+          workdir: .
+          buildozer_version: stable
           
       - name: Upload APK
         uses: actions/upload-artifact@v4
