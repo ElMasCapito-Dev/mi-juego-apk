@@ -1,58 +1,29 @@
-# Shipit OS generated buildozer.spec
-# Edit title / package.name / requirements as needed, then re-run shipit.
-
 [app]
-
-# (str) Title of your application
-title = Juego.Py
-
-# (str) Package name
-package.name = juegopy
-
-# (str) Package domain (needed for android/ios packaging)
-package.domain = org.shipit
-
-# (str) Source code where the main.py live
+title = Anime Multiverse
+package.name = animemultiverse
+package.domain = org.mitol
 source.dir = .
-
-# (list) Source files to include
 source.include_exts = py,png,jpg,kv,atlas,json
-# (list) Source files to exclude
-source.exclude_exts = spec,pyc,pyo
+version = 1.0
 
-# (list) List of directory to exclude
-source.exclude_dirs = tests, bin, venv, .venv, .git, .github, dist, build, __pycache__
+# Requisitos exactos para que Pygame no falle
+requirements = python3==3.10.12,kivy==2.3.0,hostpython3==3.10.12,pyjnius==1.5.0,pygame
 
-# (str) Application versioning
-version = 0.1.0
-
-# (list) Application requirements (comma separated)
-requirements = python3,kivy==2.3.0,pygame
-
-# (str) Supported orientation
-orientation = portrait
-
-# (bool) Indicate if the application should be fullscreen or not
+orientation = landscape
 fullscreen = 0
 
-#------------------------------------------------------------------------------
-# Android specific
-#------------------------------------------------------------------------------
+[buildozer]
+log_level = 2
+warn_on_root = 1
 
+[app:android]
+# Solo para celulares modernos (evita errores de compilación)
+android.archs = arm64-v8a
 android.api = 33
-android.minapi = 24
+android.minapi = 21
 android.ndk = 25b
 android.accept_sdk_license = True
-android.archs = arm64-v8a
-android.logcat_filters = *:S python:D
 
-# Detected entry: main.py
-
-#------------------------------------------------------------------------------
-# Buildozer settings
-#------------------------------------------------------------------------------
-
-[buildozer]
-
-log_level = 2
-warn_on_root = 0
+# Para que no falle por las mayúsculas o los espacios
+android.presplash_color = #000000
+android.allow_backup = True
