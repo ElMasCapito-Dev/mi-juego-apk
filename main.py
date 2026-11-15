@@ -88,7 +88,7 @@ menu_config = MenuConfiguracion(datos_config)
 
 npc_anciano = NPC(ANCHO // 2 - 50, nombre="Anciano", tipo="anciano")
 npc_razas = NPC(ANCHO - 150, nombre="Maestro de Razas", tipo="anciano")
-npc_herrero = NPC(ANCHO - 420, nombre="Herrero", tipo="herrero")
+npc_herrero = NPC(ANCHO - 420, nombre="Herrero", tipo="herreria")
 npc_comerciante = NPC(ANCHO - 650, nombre="Comerciante", tipo="comerciante")
 
 ESCENA_MUNDO = "mundo"
@@ -111,11 +111,12 @@ mensaje_t = 0
 ambient_t = 0
 
 pygame.font.init()
-fuente_msg = pygame.font.SysFont(None, 22)
-fuente_menu = pygame.font.SysFont(None, 26)
-fuente_titulo = pygame.font.SysFont(None, 34)
-fuente_flotante = pygame.font.SysFont(None, 30)
-fuente_boton = pygame.font.SysFont(None, 24)
+# CAMBIO AQUÍ: Usamos Font(None, ...) en lugar de SysFont
+fuente_msg = pygame.font.Font(None, 22)
+fuente_menu = pygame.font.Font(None, 26)
+fuente_titulo = pygame.font.Font(None, 34)
+fuente_flotante = pygame.font.Font(None, 30)
+fuente_boton = pygame.font.Font(None, 24)
 
 COMERCIANTE_W, COMERCIANTE_H = 640, 460
 COMERCIANTE_X = ANCHO // 2 - COMERCIANTE_W // 2
@@ -766,26 +767,26 @@ while True:
 
     ui.dibujar_hud(pantalla, datos, jugador)
 
-    f_gemas = pygame.font.SysFont(None, 20)
+    f_gemas = pygame.font.Font(None, 20)
     pantalla.blit(f_gemas.render(f"Gemas: {datos['gemas']}", True, (200, 100, 255)), (15, 145))
 
     if jugador.espada_equipada and not algo_bloquea_ui():
-        f_z = pygame.font.SysFont(None, 20)
+        f_z = pygame.font.Font(None, 20)
         txt_z = f_z.render("[Z] Fuego Listo", True, (255, 150, 50)) if jugador.z_cd <= 0 else f_z.render(f"[Z] {jugador.z_cd // FPS + 1}s", True, (150, 150, 150))
         pantalla.blit(txt_z, (15, 168))
 
     if jugador.datos.get("raza") == "kitsune":
-        f_k = pygame.font.SysFont(None, 20)
+        f_k = pygame.font.Font(None, 20)
         txt_k = f_k.render("[T] TRANSFORMADO (quitar)", True, (255, 160, 40)) if jugador.trans_activa else (f_k.render(f"[T] {jugador.trans_cd // FPS + 1}s", True, (150, 150, 150)) if jugador.trans_cd > 0 else f_k.render("[T] ¡Transformar!", True, (255, 200, 60)))
         pantalla.blit(txt_k, (15, 190))
 
     if jugador.datos.get("raza") == "dragon":
-        f_d = pygame.font.SysFont(None, 20)
+        f_d = pygame.font.Font(None, 20)
         txt_d = f_d.render("[T] DRAGÓN (quitar)", True, (255, 100, 40)) if jugador.dragon_trans else (f_d.render(f"[T] {jugador.dragon_trans_cd // FPS + 1}s", True, (150, 150, 150)) if jugador.dragon_trans_cd > 0 else f_d.render("[T] ¡Transformar Dragón!", True, (255, 160, 60)))
         pantalla.blit(txt_d, (15, 190))
 
     if jugador.datos.get("raza") == "demonio":
-        f_dem = pygame.font.SysFont(None, 20)
+        f_dem = pygame.font.Font(None, 20)
         txt_dem = f_dem.render("[T] DEMONIO (quitar)", True, (255, 50, 150)) if jugador.demonio_trans else (f_dem.render(f"[T] {jugador.demonio_trans_cd // FPS + 1}s", True, (150, 150, 150)) if jugador.demonio_trans_cd > 0 else f_dem.render("[T] ¡Transformar Demonio!", True, (200, 100, 255)))
         pantalla.blit(txt_dem, (15, 190))
 

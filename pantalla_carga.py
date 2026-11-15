@@ -22,8 +22,9 @@ class PantallaCarga:
             })
             
         pygame.font.init()
-        self.f_titulo = pygame.font.SysFont(None, 60)
-        self.f_sub = pygame.font.SysFont(None, 24)
+        # CAMBIO AQUÍ: Usamos Font(None, ...) en lugar de SysFont
+        self.f_titulo = pygame.font.Font(None, 60)
+        self.f_sub = pygame.font.Font(None, 24)
         
     def actualizar(self):
         self.t += 1

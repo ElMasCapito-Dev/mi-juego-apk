@@ -16,8 +16,7 @@ package.domain = org.shipit
 source.dir = .
 
 # (list) Source files to include
-source.include_exts = py,png,jpg,jpeg,kv,atlas,ttf,txt,json,html,js,css,mp3,wav,ogg,gif,xml
-
+source.include_exts = py,png,jpg,kv,atlas,json
 # (list) Source files to exclude
 source.exclude_exts = spec,pyc,pyo
 
@@ -28,7 +27,7 @@ source.exclude_dirs = tests, bin, venv, .venv, .git, .github, dist, build, __pyc
 version = 0.1.0
 
 # (list) Application requirements (comma separated)
-requirements = python3,kivy
+requirements = python3,kivy==2.3.0,pygame
 
 # (str) Supported orientation
 orientation = portrait
