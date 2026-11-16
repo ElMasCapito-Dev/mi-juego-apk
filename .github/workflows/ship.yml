@@ -6,13 +6,22 @@ on:
 
 jobs:
   build-android:
-    runs-on: ubuntu-latest
-    container:
-      image: kivy/buildozer:latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
-
-      - name: Crear buildozer.spec
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y git zip unzip openjdk-17-jdk autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev cmake libffi-dev libssl-dev
+          pip install --upgrade buildozer cython==0.29.36
+          
+      - name: Create buildozer.spec
         run: |
           echo "[app]" > buildozer.spec
           echo "title = Anime Multiverse" >> buildozer.spec
@@ -21,7 +30,10 @@ jobs:
           echo "source.dir = ." >> buildozer.spec
           echo "source.include_exts = py,png,jpg,kv,atlas,json" >> buildozer.spec
           echo "version = 1.0" >> buildozer.spec
-          echo "requirements = python3==3.10.12,kivy==2.3.0,hostpython3==3.10.12,pyjnius==1.5.0,pygame" >> buildozer.spec
+          
+          # Quitamos las versiones exactas problemáticas
+          echo "requirements = python3,kivy,pygame,pyjnius" >> buildozer.spec
+          
           echo "orientation = landscape" >> buildozer.spec
           echo "fullscreen = 0" >> buildozer.spec
           echo "[buildozer]" >> buildozer.spec
@@ -34,21 +46,29 @@ jobs:
           echo "android.ndk = 25b" >> buildozer.spec
           echo "android.accept_sdk_license = True" >> buildozer.spec
 
-      # 👇 ESTE ES EL PASO NUEVO QUE LO ARREGLA TODO 👇
-      - name: Aceptar Licencias de Android
+      - name: Force Install Android SDK and Fix Paths
         run: |
-          mkdir -p /root/.android
-          touch /root/.android/repositories.cfg
-          yes | sdkmanager --licenses || true
+          export ANDROID_HOME=$HOME/.buildozer/android/platform/android-sdk
+          mkdir -p $ANDROID_HOME
+          cd $ANDROID_HOME
+          wget -q https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
+          unzip -q commandlinetools-linux-9477386_latest.zip
+          mkdir -p cmdline-tools/latest
+          mv cmdline-tools/bin cmdline-tools/lib cmdline-tools/source.properties cmdline-tools/latest/
+          export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
+          yes | sdkmanager "platform-tools" "platforms;android-33" "build-tools;33.0.2" --sdk_root=$ANDROID_HOME
+          mkdir -p $ANDROID_HOME/tools/bin
+          ln -s $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager $ANDROID_HOME/tools/bin/sdkmanager
           
-      - name: Compilar APK con Buildozer
-        timeout-minutes: 45
-        env:
-          BUILDOZER_WARN_ON_ROOT: 0
+      - name: Build with Buildozer
         run: |
+          export PATH=$PATH:~/.local/bin
+          export ANDROID_HOME=$HOME/.buildozer/android/platform/android-sdk
+          export PATH=$PATH:$ANDROID_HOME/cmdline-tools/latest/bin
+          export PATH=$PATH:$ANDROID_HOME/tools/bin
           buildozer -v android debug
-
-      - name: Subir APK
+          
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: Mi-Juego-APK
